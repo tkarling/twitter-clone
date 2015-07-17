@@ -19,6 +19,10 @@ body {
 	font-family: "Helvetica Neue",Arial,sans-serif;
 }
 
+.red {
+	color: red;
+}
+
 /* GLOBAL ELEMENTS */
 .avatar {
 	width: 32px;
