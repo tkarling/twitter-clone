@@ -1,11 +1,11 @@
-console.log("Hello fake twitter");
+// console.log("Hello fake twitter");
 $(document).ready(function(){
 
 	var composeHeight = $(".tweet-compose").height();
 	var maxCharCount = Number($("#char-count").text());
 	var charCountColor = $("#char-count").css("color");
-	console.log('maxCharCount', maxCharCount);
-	console.log('charCountColor', charCountColor);
+	// console.log('maxCharCount', maxCharCount);
+	// console.log('charCountColor', charCountColor);
 
 	$("button, #tweet-controls").hide();
 
@@ -41,12 +41,38 @@ $(document).ready(function(){
 
 	});
 
-	// (".tweet-actions").hide();
+	function setUpActionHiding() {		
+		$(".tweet-actions").hide();
 
+		$(".tweet").off("mouseenter");		
+		$(".tweet").on("mouseenter", function() {
+			// console.log("hovering");
+			$(this).find(".tweet-actions").show();
+		});
+
+		$(".tweet").off("mouseleave");		
+		$(".tweet").on("mouseleave", function() {
+			// console.log("hiding");
+			$(this).find(".tweet-actions").hide();
+		});
+
+	};
+	setUpActionHiding();
+
+	function setUpStatsHiding() {
+		$(".stats, .reply").hide();
+
+		$(".tweet").off("click")
+		$(".tweet").on("click", function() {
+			// console.log("clicking");
+			$(this).find(".stats, .reply").slideToggle(400);
+		});
+	}
+	setUpStatsHiding();
 
 	var myUser = { 
 		name: $("#profile-summary > .content > p").text(), 
-		username: "@live",
+		username: "@tkarling",
 		img: $("#profile-summary > .content > img").attr("src")
 	}
 
@@ -81,13 +107,20 @@ $(document).ready(function(){
 						<div class="time"> \
 							1:04 PM - 19 Sep 13 \
 						</div> \
+					</div> \
+					<div class="reply"> \
+						<img class="avatar" src="img/alagoon.jpg" /> \
+						<textarea class="tweet-compose" placeholder="Reply to ' + user.username + '"/></textarea> \
+					</div> \
 				</div>';
 	};
 
 	$("button").on("click", function() {
 		var tweet = $(".tweet-compose").val();
-		console.log("tweet", tweet);
+		// console.log("tweet", tweet);
 		$("#stream").prepend(tweetString(myUser, tweet));
+		setUpActionHiding();
+		setUpStatsHiding();
 	});
 
 
