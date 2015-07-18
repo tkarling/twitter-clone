@@ -11,22 +11,29 @@ $(document).ready(function(){
 
 
 	$(".tweet-compose").on("focus", function() {
-		console.log("focus");
+		// console.log("focus");
 		$("button, #tweet-controls").show();
 		$(".tweet-compose").height(2 * composeHeight);
 	});
 
-	$(".tweet-compose").on("focusout", function() {
-		console.log("focusout");
+	function resetTweetCompose () {
+		$(".tweet-compose").val("");
+		$(".tweet-compose").height(composeHeight);
+		$("button, #tweet-controls").hide();
+	};
+
+	$(".tweet-compose").on("focusout", function(e) {
+		// console.log("focusout", this, $(this).val().length);
 		if($(this).val().length === 0) {
-			$("button, #tweet-controls").hide();
-			$(".tweet-compose").height(composeHeight);
+			// console.log('$(this).val().length', $(this).val().length);
+			resetTweetCompose();
 		}
 	});
 
-	$(".tweet-compose").on("keyup", function() {
+	$(".tweet-compose").on("keyup", function(e) {
+		var key = e.which;
 		var charCount = maxCharCount - $(this).val().length;
-		console.log('charCount', charCount);
+		// console.log('charCount', charCount);
 		$("#char-count").text(charCount);
 		if(charCount < 11) {
 			$("#char-count").css("color", "red");
@@ -37,6 +44,11 @@ $(document).ready(function(){
 			$("button").prop('disabled', true);
 		} else {
 			$("button").prop('disabled', false);
+		}
+		if(key === 13)  // the enter key code
+  		{
+  			// console.log("clicking button");
+		    $("button").click();
 		}
 
 	});
@@ -62,9 +74,17 @@ $(document).ready(function(){
 	function setUpStatsHiding() {
 		$(".stats, .reply").hide();
 
+
+		// $(".tweet-compose").on("click", function(e) {
+		// });
+
 		$(".tweet").off("click")
-		$(".tweet").on("click", function() {
-			// console.log("clicking");
+		$(".tweet").on("click", function(e) {
+			// console.log("clicking e.target", e.target.className, e);
+			if (e.target.className === "tweet-compose") {
+				// console.log('returning');
+				return;
+			}
 			$(this).find(".stats, .reply").slideToggle(400);
 		});
 	}
@@ -121,8 +141,9 @@ $(document).ready(function(){
 		$("#stream").prepend(tweetString(myUser, tweet));
 		setUpActionHiding();
 		setUpStatsHiding();
+		resetTweetCompose();
+		$(".tweet-compose").blur();
 	});
-
 
 
 })
